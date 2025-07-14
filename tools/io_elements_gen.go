@@ -172,7 +172,7 @@ func generate(data []*IOElementDefinition, output string) {
 	sb.WriteString("package " + options.GenPkgName + "\n\n")
 	prefix := ""
 	if !options.GenInternal {
-		sb.WriteString(`import "github.com/alim-zanibekov/teltonika/ioelements"` + "\n\n")
+		sb.WriteString(`import "github.com/conneqtech/teltonika/ioelements"` + "\n\n")
 		prefix = "ioelements."
 	}
 

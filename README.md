@@ -22,8 +22,8 @@ import (
     "encoding/json"
     "fmt"
 
-    "github.com/alim-zanibekov/teltonika"
-    "github.com/alim-zanibekov/teltonika/ioelements"
+    "github.com/conneqtech/teltonika"
+    "github.com/conneqtech/teltonika/ioelements"
 )
 
 func main() {
@@ -350,7 +350,7 @@ Output:
 ```text
 goos: darwin
 goarch: arm64
-pkg: github.com/alim-zanibekov/teltonika
+pkg: github.com/conneqtech/teltonika
 BenchmarkTCPDecode-10                                            2556680               472.8 ns/op           405 B/op         11 allocs/op
 BenchmarkTCPDecodeReader-10                                      2203923               546.8 ns/op           517 B/op         13 allocs/op
 BenchmarkUDPDecodeSlice-10                                       1582856               697.8 ns/op          1350 B/op         38 allocs/op
@@ -365,7 +365,7 @@ BenchmarkCrc16IBMGenerateLookupTable-10                          4424582        
 BenchmarkCrc16IBMWithLookupTable-10                               455336              2641 ns/op               0 B/op          0 allocs/op
 BenchmarkCrc16IBMWithoutLookupTable-10                             47612             25130 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/alim-zanibekov/teltonika     22.685s
+ok      github.com/conneqtech/teltonika     22.685s
 ```
 
 As you can see from the results, passing the `&teltonika.DecodeConfig{teltonika.OnReadBuffer}`

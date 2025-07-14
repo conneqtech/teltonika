@@ -23,8 +23,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/alim-zanibekov/teltonika"
-	"github.com/alim-zanibekov/teltonika/ioelements"
+	"github.com/conneqtech/teltonika"
+	"github.com/conneqtech/teltonika/ioelements"
 )
 
 var decodeConfig = &teltonika.DecodeConfig{IoElementsAlloc: teltonika.OnReadBuffer}

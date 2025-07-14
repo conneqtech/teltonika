@@ -1,4 +1,4 @@
-module github.com/alim-zanibekov/teltonika
+module github.com/conneqtech/teltonika
 
 go 1.23.0
 
