@@ -744,6 +744,15 @@ func normalize(it *IOElementDefinition) {
 	if it.Id == 69 && it.Max == 3 {
 		it.Max = 4
 	}
+	if it.Id == 237 && it.Max == 1 {
+		it.Max = 99
+	}
+	if it.Id == 10883 && it.Max == 0 {
+		it.Max = 1
+	}
+	if it.Id == 12740 && it.Max == 0 {
+		it.Max = 1
+	}
 	if (it.Id == 278 || it.Id == 275 || it.Id == 272 || it.Id == 269) && it.NumBytes == 2 {
 		it.NumBytes = 1
 	}
