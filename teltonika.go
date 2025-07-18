@@ -106,6 +106,7 @@ type Message struct {
 	Type      MessageType `json:"type"`                // may contain an arbitrary value if codec is 15
 	Imei      string      `json:"imei,omitempty"`      // if codec is 14 or 15 else ""
 	Text      string      `json:"text"`
+	Raw       []byte      `json:"raw"`
 }
 
 // DecodeConfig optional configuration that can be passed in all Decode* functions (last param).
@@ -608,6 +609,7 @@ func decodeData(codecId CodecId, reader *byteReader, data *Data) error {
 }
 
 func decodeCommand(codecId CodecId, reader *byteReader, data *Message) error {
+	startPos := reader.pos
 	commandType, err := reader.ReadUInt8BE()
 	if err != nil {
 		return err
@@ -648,6 +650,10 @@ func decodeCommand(codecId CodecId, reader *byteReader, data *Message) error {
 		return err
 	}
 	data.Text = string(command)
+
+	data.Raw = make([]byte, reader.pos-startPos)
+	copy(data.Raw, reader.input[startPos:reader.pos])
+
 	return nil
 }
 
