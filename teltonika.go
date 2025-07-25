@@ -91,6 +91,7 @@ type Data struct {
 	Priority       uint8          `json:"priority"`
 	GenerationType GenerationType `json:"generationType"` // codec 16 else Unknown
 	Elements       []IOElement    `json:"elements"`
+	Raw            []byte         `json:"raw"`
 }
 
 type IOElementValue []byte
@@ -105,6 +106,7 @@ type Message struct {
 	Type      MessageType `json:"type"`                // may contain an arbitrary value if codec is 15
 	Imei      string      `json:"imei,omitempty"`      // if codec is 14 or 15 else ""
 	Text      string      `json:"text"`
+	Raw       []byte      `json:"raw"`
 }
 
 // DecodeConfig optional configuration that can be passed in all Decode* functions (last param).
@@ -544,6 +546,7 @@ func decodePacket(reader *byteReader, packet *Packet) error {
 }
 
 func decodeData(codecId CodecId, reader *byteReader, data *Data) error {
+	startPos := reader.pos
 	timestampMs, err := reader.ReadUInt64BE()
 	if err != nil {
 		return err
@@ -587,17 +590,26 @@ func decodeData(codecId CodecId, reader *byteReader, data *Data) error {
 	data.Priority = priority
 
 	if codecId == Codec8 {
-		return decodeElementsCodec8(reader, data)
+		err = decodeElementsCodec8(reader, data)
 	} else if codecId == Codec8E {
-		return decodeElementsCodec8E(reader, data)
+		err = decodeElementsCodec8E(reader, data)
 	} else if codecId == Codec16 {
-		return decodeElementsCodec16(reader, data)
+		err = decodeElementsCodec16(reader, data)
+	} else {
+		err = fmt.Errorf("unknown codec %d", codecId)
+	}
+	if err != nil {
+		return err
 	}
 
-	return fmt.Errorf("unknown codec %d", codecId)
+	data.Raw = make([]byte, reader.pos-startPos)
+	copy(data.Raw, reader.input[startPos:reader.pos])
+
+	return nil
 }
 
 func decodeCommand(codecId CodecId, reader *byteReader, data *Message) error {
+	startPos := reader.pos
 	commandType, err := reader.ReadUInt8BE()
 	if err != nil {
 		return err
@@ -638,6 +650,10 @@ func decodeCommand(codecId CodecId, reader *byteReader, data *Message) error {
 		return err
 	}
 	data.Text = string(command)
+
+	data.Raw = make([]byte, reader.pos-startPos)
+	copy(data.Raw, reader.input[startPos:reader.pos])
+
 	return nil
 }
 

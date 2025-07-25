@@ -172,7 +172,7 @@ func generate(data []*IOElementDefinition, output string) {
 	sb.WriteString("package " + options.GenPkgName + "\n\n")
 	prefix := ""
 	if !options.GenInternal {
-		sb.WriteString(`import "github.com/alim-zanibekov/teltonika/ioelements"` + "\n\n")
+		sb.WriteString(`import "github.com/conneqtech/teltonika/ioelements"` + "\n\n")
 		prefix = "ioelements."
 	}
 
@@ -732,11 +732,26 @@ func normalize(it *IOElementDefinition) {
 		// uint8 https://wiki.teltonika-gps.com/view/FMB920_Teltonika_Data_Sending_Parameters_ID
 		// ASCII https://wiki.teltonika-gps.com/view/FMM250_Teltonika_Data_Sending_Parameters_ID
 	}
+	if it.Type == IOElementUnsigned && it.Min < 0 {
+		it.Type = IOElementSigned
+	}
 	if it.Id == 168 && it.Max == 6553 {
 		it.Max = 65535
 	}
 	if it.Id == 103 && it.Max == 1677215 {
 		it.Max = 16777215
+	}
+	if it.Id == 69 && it.Max == 3 {
+		it.Max = 4
+	}
+	if it.Id == 237 && it.Max == 1 {
+		it.Max = 99
+	}
+	if it.Id == 10883 && it.Max == 0 {
+		it.Max = 1
+	}
+	if it.Id == 12740 && it.Max == 0 {
+		it.Max = 1
 	}
 	if (it.Id == 278 || it.Id == 275 || it.Id == 272 || it.Id == 269) && it.NumBytes == 2 {
 		it.NumBytes = 1
