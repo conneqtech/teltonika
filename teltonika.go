@@ -226,7 +226,7 @@ func DecodeTCPFromReader(input io.Reader, config ...*DecodeConfig) ([]byte, *Dec
 
 // DecodeTCPFromReaderBuf
 // decode (12, 13, 14, 15, 8, 16, or 8 extended codec) tcp packet from io.Reader
-// writes the read bytes to readBytes buffer (max packet size 1280 bytes)
+// writes the read bytes to readBytes buffer
 // returns the number of bytes read and decoded packet or an error
 func DecodeTCPFromReaderBuf(input io.Reader, readBytes []byte, config ...*DecodeConfig) (int, *DecodedTCP, error) {
 	if len(config) > 1 {
@@ -278,7 +278,7 @@ func DecodeUDPFromReader(input io.Reader, config ...*DecodeConfig) ([]byte, *Dec
 
 // DecodeUDPFromReaderBuf
 // decode (12, 13, 14, 15, 8, 16, or 8 extended codec) udp packet from io.Reader
-// writes read bytes to readBytes slice (max packet size 1280 bytes)
+// writes read bytes to readBytes slice
 // returns the number of bytes read and decoded packet or an error
 func DecodeUDPFromReaderBuf(input io.Reader, readBytes []byte, config ...*DecodeConfig) (int, *DecodedUDP, error) {
 	if len(config) > 1 {
@@ -341,13 +341,7 @@ func decodeTCPInternal(inputReader io.Reader, inputBuffer []byte, outputBuffer [
 		return nil, nil, fmt.Errorf("'Preamble' field must be equal to 0. received preamble is %v", preamble)
 	}
 
-	// Maximum AVL packet size is 1280 bytes. (Is it with or without CRC, Preamble, Data Field Length?)
 	dataFieldLength := int(binary.BigEndian.Uint32(header[4:]))
-
-	if dataFieldLength > 1280 {
-		return nil, nil, fmt.Errorf("maximum AVL packet size is 1280 bytes. 'Data Field Length' equal to %v bytes", dataFieldLength)
-	}
-
 	remainingSize := dataFieldLength + 4 // + CRC size
 	packetSize := remainingSize + headerSize
 
@@ -425,13 +419,7 @@ func decodeUDPInternal(inputReader io.Reader, inputBuffer []byte, outputBuffer [
 	}
 
 	size := int(binary.BigEndian.Uint16(header[:2]))
-
 	packetId := binary.BigEndian.Uint16(header[2:])
-
-	// Maximum AVL packet size is 1280 bytes.
-	if size > 1280 {
-		return nil, nil, fmt.Errorf("maximum AVL packet size is 1280 bytes. 'Data Field Length' equal to %v bytes", size)
-	}
 
 	remainingSize := size - 3
 	packetSize := remainingSize + headerSize
@@ -949,11 +937,6 @@ func encodeUDPInternal(imei string, packetId uint16, avlPacketId uint8, packet *
 			}
 			dataSize += n
 		}
-	}
-
-	// Maximum AVL packet size is 1280 bytes.
-	if dataSize > 1280 {
-		return nil, fmt.Errorf("maximum AVL packet size is 1280 bytes. Estimated size is equal to %v bytes", dataSize)
 	}
 
 	buf := make([]byte, dataSize)
