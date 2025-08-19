@@ -253,7 +253,7 @@ func DecodeTCPFromReader(input io.Reader, config ...*DecodeConfig) ([]byte, *Dec
 
 // DecodeTCPFromReaderBuf
 // decode (12, 13, 14, 15, 8, 16, or 8 extended codec) tcp packet from io.Reader
-// writes the read bytes to readBytes buffer (max packet size 1280 bytes)
+// writes the read bytes to readBytes buffer
 // returns the number of bytes read and decoded packet or an error
 func DecodeTCPFromReaderBuf(input io.Reader, readBytes []byte, config ...*DecodeConfig) (int, *DecodedTCP, error)
 
@@ -269,7 +269,7 @@ func DecodeUDPFromReader(input io.Reader, config ...*DecodeConfig) ([]byte, *Dec
 
 // DecodeUDPFromReaderBuf
 // decode (12, 13, 14, 15, 8, 16, or 8 extended codec) udp packet from io.Reader
-// writes read bytes to readBytes slice (max packet size 1280 bytes)
+// writes read bytes to readBytes slice
 // returns the number of bytes read and decoded packet or an error
 func DecodeUDPFromReaderBuf(input io.Reader, readBytes []byte, config ...*DecodeConfig) (int, *DecodedUDP, error)
 
